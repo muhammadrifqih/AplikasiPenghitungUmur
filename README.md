@@ -1,17 +1,49 @@
-# Modul Latihan 2 - Aplikasi Penghitung Umur
-Deskripsi Program:
+# Modul Pengerjaan Latihan 2 – Aplikasi Penghitung Umur
 
-Pengguna memilih tanggal lahir dari JDateChooser
-Setelah menekan tombol Hitung, umur dalam tahun, bulan, dan hari ditampilkan
-Komponen GUI: JFrame, JPanel, JLabel, JDateChooser, JButton, JTextField
+## Langkah 1: Membuat Project Baru di NetBeans
+1. Buka **NetBeans**.
+2. Pilih **File > New Project**.
+3. Pilih **Java > Java Application**, beri nama proyek, misalnya `AplikasiPenghitungUmur`, lalu klik **Finish**.
 
-Logika Program: Manipulasi tanggal menggunakan LocalDate, Perhitungan selisih waktu
+## Langkah 2: Menghubungkan Project ke GitHub
+1. Buka **GitHub Desktop**, klik **File > Add Local Repository**.
+2. Pilih folder proyek, klik **Add repository**.
+3. Klik **Create repository**, isi deskripsi repository, lalu klik **Create repository**.
 
-Events:
+## Langkah 3: Membuat JFrame Form
+1. Klik kanan pada **Source Packages > New > JFrame Form**.
+2. Beri nama `PenghitungUmurFrame` dan klik **Finish**.
+3. Buka **GitHub Desktop**, buat commit dengan pesan "Menambahkan JFrame Form".
 
-ActionListener untuk tombol Hitung
-PropertyChangeListener pada JDateChooser untuk deteksi perubahan tanggal
-Variasi:
+## Langkah 4: Menambahkan Komponen GUI dan Mendesain Aplikasi
+1. **Unduh** [JCalendar](https://toedter.com/jcalendar/) dan tambahkan `jcalendar-1.4.jar` ke folder `lib`.
+2. **Tambahkan** JCalendar ke NetBeans melalui **Palette Manager**.
+3. **Desain GUI** dengan komponen:
+    - **JFrame**: Title `Aplikasi Penghitung Umur`.
+    - **JPanel** untuk tempat komponen.
+    - **JDateChooser**, **JTextField**, dan **JButton** untuk input dan tampilan umur.
+4. Commit perubahan ke GitHub dengan pesan "Menambahkan GUI components dan mendesain aplikasi".
 
-Sediakan informasi tambahan seperti hari ulang tahun berikutnya
-Integrasikan dengan API eksternal untuk menampilkan peristiwa penting pada tanggal lahir
+## Langkah 5: Menambahkan Logika Program
+1. Buat class baru `PenghitungUmurHelper` untuk menghitung umur dan hari ulang tahun berikutnya:
+   - **hitungUmurDetail**: Menghitung umur dalam tahun, bulan, dan hari.
+   - **hariUlangTahunBerikutnya**: Menghitung tanggal ulang tahun berikutnya.
+2. Tambahkan event `ActionListener` pada tombol "Hitung".
+3. Tambahkan event `PropertyChangeListener` pada `JDateChooser`.
+4. Commit perubahan dengan pesan "Menambahkan event dan logika program untuk menghitung umur".
+
+## Langkah 6: Menambahkan Variasi Peristiwa Penting
+1. **Tambahkan JTextArea** untuk menampilkan peristiwa penting.
+2. **Unduh** [JSON-Java](https://github.com/stleary/JSON-java) dan tambahkan `json-20240303.jar` ke folder `lib`.
+3. Tambahkan fungsi `getPeristiwaBarisPerBaris` di `PenghitungUmurHelper` untuk mengambil data peristiwa dari API eksternal.
+4. Commit perubahan dengan pesan "Menambahkan variasi untuk menampilkan peristiwa penting".
+
+## Langkah 7: Menambahkan Terjemahan ke Bahasa Indonesia
+1. Tambahkan fungsi `translateToIndonesian` di `PenghitungUmurHelper` untuk terjemahan deskripsi peristiwa.
+2. Panggil fungsi terjemahan saat menampilkan deskripsi peristiwa di `JTextArea`.
+3. Commit dengan pesan "Menambahkan variasi untuk terjemah ke Bahasa Indonesia".
+
+## Langkah 8: Publish Repository ke Github.com
+1. Klik **Publish repository** di GitHub Desktop.
+2. Hapus centang pada **Keep this code private** lalu klik **Publish repository**.
+3. Setelah selesai, salin URL repository dan kumpulkan di e-learning.
