@@ -13,6 +13,8 @@ import java.util.Date;
  */
 public class PenghitungUmurFrame extends javax.swing.JFrame {
     private PenghitungUmurHelper helper;
+    private volatile boolean stopFetching = false;
+    private Thread peristiwaThread;
 
     /**
      * Creates new form PenghitungUmurFrame
@@ -40,9 +42,12 @@ public class PenghitungUmurFrame extends javax.swing.JFrame {
         txtHariUlangTahunBerikutnya = new javax.swing.JTextField();
         jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        txtAreaPeristiwa = new javax.swing.JTextArea();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Aplikasi Penghitung Umur");
+        getContentPane().setLayout(new java.awt.GridLayout());
 
         jPanel1.setName("txtUmur"); // NOI18N
 
@@ -80,13 +85,17 @@ public class PenghitungUmurFrame extends javax.swing.JFrame {
             }
         });
 
+        txtAreaPeristiwa.setColumns(20);
+        txtAreaPeristiwa.setRows(5);
+        jScrollPane1.setViewportView(txtAreaPeristiwa);
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -102,8 +111,9 @@ public class PenghitungUmurFrame extends javax.swing.JFrame {
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                         .addComponent(jButton1)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jButton2)))
-                .addContainerGap(40, Short.MAX_VALUE))
+                        .addComponent(jButton2))
+                    .addComponent(jScrollPane1))
+                .addContainerGap(19, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -124,19 +134,12 @@ public class PenghitungUmurFrame extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton1)
                     .addComponent(jButton2))
-                .addContainerGap(151, Short.MAX_VALUE))
+                .addGap(12, 12, 12)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 133, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-        );
+        getContentPane().add(jPanel1);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -160,6 +163,33 @@ public class PenghitungUmurFrame extends javax.swing.JFrame {
 
             String tanggalUlangTahunBerikutnya = ulangTahunBerikutnya.format(formatter);
             txtHariUlangTahunBerikutnya.setText(hariUlangTahunBerikutnya + " (" + tanggalUlangTahunBerikutnya + ")");
+            // Set stop flag untuk thread sebelumnya
+stopFetching = true;
+if (peristiwaThread != null && peristiwaThread.isAlive()) {
+peristiwaThread.interrupt(); // Beri sinyal ke thread untuk berhenti
+}
+// Reset flag untuk thread baru
+stopFetching = false;
+// Mendapatkan peristiwa penting secara asinkron
+peristiwaThread = new Thread(() -> {
+try {
+txtAreaPeristiwa.setText("Tunggu, sedang mengambil data...\n");
+helper.getPeristiwaBarisPerBaris(ulangTahunBerikutnya,
+txtAreaPeristiwa, () -> stopFetching);
+if (!stopFetching) {
+javax.swing.SwingUtilities.invokeLater(() ->
+txtAreaPeristiwa.append("Selesai mengambil data peristiwa"));
+}
+} catch (Exception e) {
+if (Thread.currentThread().isInterrupted()) {
+javax.swing.SwingUtilities.invokeLater(() ->
+txtAreaPeristiwa.setText("Pengambilan data dibatalkan.\n"));
+}
+
+}
+});
+peristiwaThread.start();
+            
 }
     }//GEN-LAST:event_jButton1ActionPerformed
 
@@ -170,6 +200,12 @@ public class PenghitungUmurFrame extends javax.swing.JFrame {
     private void dateChooserTanggalLahirPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_dateChooserTanggalLahirPropertyChange
         txtUmur.setText("");
         txtHariUlangTahunBerikutnya.setText("");
+        // Hentikan thread yang sedang berjalan saat tanggal lahir berubah
+        stopFetching = true;
+        if (peristiwaThread != null && peristiwaThread.isAlive()) {
+        peristiwaThread.interrupt();
+        }
+        txtAreaPeristiwa.setText("");
     }//GEN-LAST:event_dateChooserTanggalLahirPropertyChange
 
     /**
@@ -215,6 +251,8 @@ public class PenghitungUmurFrame extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JTextArea txtAreaPeristiwa;
     private javax.swing.JTextField txtHariUlangTahunBerikutnya;
     private javax.swing.JTextField txtUmur;
     // End of variables declaration//GEN-END:variables
