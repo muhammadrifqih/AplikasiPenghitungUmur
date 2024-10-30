@@ -51,14 +51,20 @@ Langkah 8: Publish Repository ke Github.com
 
 Screenshot
 Nama    : Muhammad Rifqi Hidayat
+
 NPM     : 2210010126
+
 Kelas   : 5A Reg BJB
 
-1. Foto Awal 
+
+1. Foto Awal
+   
 ![Screenshot 2024-10-30 171823](https://github.com/user-attachments/assets/70eaa5aa-363e-43b8-9602-377ec41d935b)
 2. Foto Pilih Tanggal
+
 ![Screenshot 2024-10-30 171843](https://github.com/user-attachments/assets/35e91ac3-cb3b-4e9f-bcd3-a6adff47ad35)
 3. Foto Klik Hitung
+
 ![Screenshot 2024-10-30 171852](https://github.com/user-attachments/assets/c9817f9b-5004-4beb-a744-93039938bafd)
 
 
